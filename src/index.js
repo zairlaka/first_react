@@ -11,6 +11,7 @@
 // // // unregister() to register() below. Note this comes with some pitfalls.
 // // // Learn more about service workers: https://bit.ly/CRA-PWA
 // serviceWorker.unregister();
+//Progressive Web app
 
 import React from 'react' 
 // this will import react library
@@ -20,10 +21,16 @@ import ReactDOM from 'react-dom'
 //this is going to provide us with render method for render our react component and react element to the dom
 //import { render } from 'react-dom' -> ReactDOM.render()
 
-var style = {
-    backgroundColor: 'Orange',
-    fontFamily: 'Arial'
-}
+//=======================================
+// first we want to render our data 
+ import App from './App';
+ ReactDOM.render(<App />, document.getElementById('root'));
+//=======================================
+
+// var style = {
+//     backgroundColor: 'Orange',
+//     fontFamily: 'Arial'
+// }
 
 //----------===> 01
 // const title = React.createElement( // React Element 
@@ -71,6 +78,10 @@ var style = {
 //========================================
 
 //The reason that React has become so popular though is due to its component based structure
+//
+//component types
+//stateles functional component 
+//statefull  class component always extend from component class and have a return value
 
 // lets create our first component
 //Now the most important method, the most critical thing to understand about React components is all of them have a render method.
@@ -109,12 +120,12 @@ var style = {
 // ReactDOM.render( <Greeting name="Zair" age={23}  color="brown"/>, document.getElementById('root'))
 
 //==================================================
-let skiData = {
-    total: 50,
-    powder: 20,
-    backcountry: 10,
-    goal: 100
-}
+// let skiData = {
+//     total: 50,
+//     powder: 20,
+//     backcountry: 10,
+//     goal: 100
+// }
 
 //----------------===> 03 
 // class SkiDayCounter extends React.Component {
@@ -174,7 +185,6 @@ let skiData = {
 //     const calcGoalProgress = (total, goal) => {
 //         return getPercent(total/goal)
 //     }
-
 // const SkiDayCounter = (props) => {
 // // we dont have access to 'this' this.props here but we can access props object
 // // or you can destructure these properties like
@@ -209,23 +219,229 @@ let skiData = {
 //So far, we've created a component and we've created some custom methods to live on that component.
 // Now, really the power of React comes from composing multiple different components.
 
+//======06
+// const Staff = () => {
+//     return (
+//         <div>
+//             <h1>Librarian.</h1>
+//         </div>
+//     )
+// }
+// //======07
+// const Library = () => {
+//     return (
+//         <div>
+//             <h1>Lincoln Corner</h1>
+//             <Book title="The Longest Ride" author="Nicholas Sparks" pages={789}/>
+//             <Book title="Harry Potter" author="JK Rowling " pages={1089}/>
+//             <Book title="Reaction of React" author="Facebook" pages={589}/>
+//             <p>How to use parent component (Library) to display multiple different book components.</p>
+//         </div>
+//     )
+// }
+// //=======08
+// const Book = ({title, author, pages}) => {
+//     return (
+//         <div>
+//             <h2>{title}</h2>
+//             <p>By: {author}</p>
+//             <p>Pages: {pages} pages</p> 
+//         </div>
+//     )
+// }
+//=====For 06
+// ReactDOM.render(
+//     <div>
+//         <Staff />
+//         <Staff />
+//     </div>,  
+//     document.getElementById('root')
+// )
+//=======For 07 and 08
+// ReactDOM.render(
+//     <Library />,  
+//     document.getElementById('root')
+// )
 
+//===
 
-const Library = () => {
+/*   Funcional Components                 VS            Class Components
+simple functions                          || more feature Rich
+use Func components as much as posible    || Maintain their own private data - state
+absence of 'this' keyword                 || complex UI logic
+solution without using state              || provide lifecycle hooks 
+mainly responsible for UI                 || statful/smart/Container
+Stateless/Dumb/Presentational             ||
+
+*/
+
+//======================================
+//Let's make this a little bit more of a real world use case by creating an array of data and then displaying books based on that data
+
+let bookList = [
+    {"title": "The Longest Ride", "author": "Nicholas Sparks", "pages": "789"},
+    {"title": "Harry Potter", "author": "JK Rowling", "pages": "1045"},
+    {"title": "Reaction of React", "author": "Facebook", "pages": "584"}
+]
+//======---------09
+// const Library = ({books}) => {
+//     return (
+//         <div>
+//             <h1>Data from List, File or Database</h1>
+//             {books.map(
+//                 // book => <Book title={book.title} author={book.author} pages={book.pages}/> //the problem with this is we can't identify or point a specific book div
+//                 // //which will help track which of these components are updating, and rendering with React
+//                 (book, i) => <Book key={i} title={book.title} author={book.author} pages={book.pages}/>// now we have unique key with every book
+//             )}
+//             <p>Here we don't need to use braces if we use the ES6 syntax and return the content right after the arrow sign</p>
+//         </div>
+//     )
+// }
+
+//One of the most important concepts in React is STATE. Components can have a local state but in order to use this, we need to use in the ES6 class component.
+// one way to add local STATE to this component is to use the constructor method.
+
+//====----------10
+// class Library extends React.Component{
+//     constructor(props) {
+//         super(props)  // super method here which is going to create a new instance of this class
+//         this.state = { open: false } //Now STATE is just going to be an object with several different keys on it
+//     }
+//     render () {
+//         //const books = this.props.books
+//         const {books} = this.props //now you dont have to add this.props.books.map books destructures
+//         return (
+//             <div>
+//                 {books.map(
+//                     // book => <Book title={book.title} author={book.author} pages={book.pages}/> //the problem with this is we can't identify or point a specific book div
+//                     // //which will help track which of these components are updating, and rendering with React
+//                     (book, i) => <Book key={i} title={book.title} author={book.author} pages={book.pages}/>// now we have unique key with every book
+//                 )}
+//                 <p>this Library is {this.state.open ? 'open' : 'closed'}.</p>
+//             </div>
+//         )
+//     }
+// }
+
+//====-------------11
+// We know how to add state variables to our React applications, but how do we change state? Well,
+// we're going to use a function called setState, which is going to change the state variable within our component
+// class Library extends React.Component{
+//     constructor(props) {
+//         super(props)  // super method here which is going to create a new instance of this class
+//         this.state = { open: false } //Now STATE is just going to be an object with several different keys on it
+//         // whenever we're using a constructor method, we need to bind this. to some button you know
+//         this.toggleOpenClosed = this.toggleOpenClosed.bind(this) //
+//     }
+//     toggleOpenClosed(){
+//         this.setState({
+//             open: !this.state.open
+//         })
+//     }
+//     render () {
+//         //const books = this.props.books
+//         const {books} = this.props //now you dont have to add this.props.books.map books destructures
+//         return (
+//             <div>
+//                 {books.map(
+//                     // book => <Book title={book.title} author={book.author} pages={book.pages}/> //the problem with this is we can't identify or point a specific book div
+//                     // //which will help track which of these components are updating, and rendering with React
+//                     (book, i) => <Book key={i} title={book.title} author={book.author} pages={book.pages}/>// now we have unique key with every book
+//                 )}
+//                 <p>this Library is {this.state.open ? 'open' : 'closed'}.</p>
+//                 <button onClick={this.toggleOpenClosed}>Change</button>
+//             </div>
+//         )
+//     }
+// }
+
+//======12              WITH A CALL BACK FUNCTION INSTEAD OF STATE OBJECT
+//** SetState is asynchronous ASYNCHRONOUS. So if you are relying on the previous state to set a new value, you can use a callback function inside of setState.
+//because you see lots of callback function instead of state objects.
+
+// class Library extends React.Component{
+//     constructor(props) {
+//         super(props)  // super method here which is going to create a new instance of this class
+//         this.state = { open: false } //Now STATE is just going to be an object with several different keys on it
+//         // whenever we're using a constructor method, we need to bind this. to some button you know
+//         this.toggleOpenClosed = this.toggleOpenClosed.bind(this) //
+//     }
+//     toggleOpenClosed(){
+//         this.setState(previousState => ({ //And this'll make sure that this.setState, no matter how long it takes, will work as expected.
+//             open: !previousState.open
+//         }))
+//     }
+//     render () {
+//         //const books = this.props.books
+//         const {books} = this.props //now you dont have to add this.props.books.map books destructures
+//         return (
+//             <div>
+//                 {books.map(
+//                     // book => <Book title={book.title} author={book.author} pages={book.pages}/> //the problem with this is we can't identify or point a specific book div
+//                     // //which will help track which of these components are updating, and rendering with React
+//                     (book, i) => <Book key={i} title={book.title} author={book.author} pages={book.pages}/>// now we have unique key with every book
+//                 )}
+//                 <p>this Library is {this.state.open ? 'open' : 'closed'}.</p>
+//                 <button onClick={this.toggleOpenClosed}>Change</button>
+//             </div>
+//         )
+//     }
+// }
+
+//======13              same as above but in Clean and shorter syntax 
+//
+
+class Library extends React.Component{
+    // constructor(props) {
+    //     super(props)  // super method here which is going to create a new instance of this class
+    //     this.state = { open: false } //Now STATE is just going to be an object with several different keys on it
+    //     // whenever we're using a constructor method, we need to bind this. to some button you know
+    //     this.toggleOpenClosed = this.toggleOpenClosed.bind(this) //
+    // }
+    
+    //static property called state to our component.we can get rid off entire block of code above
+    state = { open: false}
+
+    // toggleOpenClosed(){
+    //     this.setState(previousState => ({ //And this'll make sure that this.setState, no matter how long it takes, will work as expected.
+    //         open: !previousState.open
+    //     }))
+    // }
+    toggleOpenClosed = () => { //because arrow functions will automatically bind this inside of the context of this function
+        this.setState(previousState => ({ //And this'll make sure that this.setState, no matter how long it takes, will work as expected.
+            open: !previousState.open
+        }))
+    }
+    render () {
+        //const books = this.props.books
+        const {books} = this.props //now you dont have to add this.props.books.map books destructures
+        return (
+            <div>
+                {books.map(
+                    // book => <Book title={book.title} author={book.author} pages={book.pages}/> //the problem with this is we can't identify or point a specific book div
+                    // //which will help track which of these components are updating, and rendering with React
+                    (book, i) => <Book key={i} title={book.title} author={book.author} pages={book.pages}/>// now we have unique key with every book
+                )}
+                <p>this Library is {this.state.open ? 'open' : 'closed'}.</p>
+                <button onClick={this.toggleOpenClosed}>Change</button>
+            </div>
+        )
+    }
+}
+
+//=======09   OR  10  OR 11 OR 12
+const Book = ({title, author, pages}) => {
     return (
         <div>
-            <h1>Lincoln Corner</h1>
-        </div>git
+            <h2>{title}</h2>
+            <p>By: {author}</p>
+            <p>Pages: {pages} pages</p> 
+        </div>
     )
 }
 
-ReactDOM.render(
-    <Library />,  
-    document.getElementById('root')
-)
-ReactDOM.render(
-    <Library />,  
-    document.getElementById('root')
-)
 
-//===
+ReactDOM.render(
+    <Library books={bookList}/>,  
+    document.getElementById('root')
+)
