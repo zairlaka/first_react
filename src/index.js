@@ -331,7 +331,8 @@ let bookList = [
 //         super(props)  // super method here which is going to create a new instance of this class
 //         this.state = { open: false } //Now STATE is just going to be an object with several different keys on it
 //         // whenever we're using a constructor method, we need to bind this. to some button you know
-//         this.toggleOpenClosed = this.toggleOpenClosed.bind(this) //
+//         this.toggleOpenClosed = this.toggleOpenClosed.bind(this) // The next thing I need to do here is whenever we're using a constructor method, we need to bind this. So, in other words,
+//          //I need to say this.toggleOpenClosed, and we'll set this equal to this.toggleOpenClosed.bind this.What this'll do is it'll make this accessible within the context of this custom method.
 //     }
 //     toggleOpenClosed(){
 //         this.setState({
@@ -391,22 +392,75 @@ let bookList = [
 //======13              same as above but in Clean and shorter syntax 
 //
 
-class Library extends React.Component{
-    // constructor(props) {
-    //     super(props)  // super method here which is going to create a new instance of this class
-    //     this.state = { open: false } //Now STATE is just going to be an object with several different keys on it
-    //     // whenever we're using a constructor method, we need to bind this. to some button you know
-    //     this.toggleOpenClosed = this.toggleOpenClosed.bind(this) //
-    // }
+// class Library extends React.Component{
+// //    // constructor(props) {
+// //    //     super(props)  // super method here which is going to create a new instance of this class
+// //    //     this.state = { open: false } //Now STATE is just going to be an object with several different keys on it
+// //    //     // whenever we're using a constructor method, we need to bind this. to some button you know
+// //   //     this.toggleOpenClosed = this.toggleOpenClosed.bind(this) //
+// //    // }
     
-    //static property called state to our component.we can get rid off entire block of code above
-    state = { open: false}
+//     //static property called state to our component.we can get rid off entire block of code above
+//     state = { open: false}
 
-    // toggleOpenClosed(){
-    //     this.setState(previousState => ({ //And this'll make sure that this.setState, no matter how long it takes, will work as expected.
-    //         open: !previousState.open
-    //     }))
-    // }
+// //    // toggleOpenClosed(){
+// //    //     this.setState(previousState => ({ //And this'll make sure that this.setState, no matter how long it takes, will work as expected.
+// //    //         open: !previousState.open
+// //    //     }))
+// //    // }
+//     toggleOpenClosed = () => { //because arrow functions will automatically bind this inside of the context of this function
+//         this.setState(previousState => ({ //And this'll make sure that this.setState, no matter how long it takes, will work as expected.
+//             open: !previousState.open
+//         }))
+//     }
+//     render () {
+// //        //const books = this.props.books
+//         const {books} = this.props //now you dont have to add this.props.books.map books destructures
+//         return (
+//             <div>
+//                 {books.map(
+// //                    // book => <Book title={book.title} author={book.author} pages={book.pages}/> //the problem with this is we can't identify or point a specific book div
+// //                    // //which will help track which of these components are updating, and rendering with React
+//                     (book, i) => <Book key={i} title={book.title} author={book.author} pages={book.pages}/>// now we have unique key with every book
+//                 )}
+//                 <p>this Library is {this.state.open ? 'open' : 'closed'}.</p>
+//                 <button onClick={this.toggleOpenClosed}>Change</button>
+//             </div>
+//         )
+//     }
+// }
+
+// ////=======09   OR  10  OR 11 OR 12 OR 13
+// const Book = ({title, author, pages}) => {
+//     return (
+//         <div>
+//             <h2>{title}</h2>
+//             <p>By: {author}</p>
+//             <p>Pages: {pages} pages</p> 
+//         </div>
+//     )
+// }
+
+
+// ReactDOM.render(
+//     <Library books={bookList}/>,  
+//     document.getElementById('root')
+// )
+//===============================================
+//===============================================
+//===============================================
+//======14              Pass state as props to the child component and conditional rendering 
+//When working with a React application, it's a good rule of thumb to keep state in the root of the tree. 
+//In other words, your root component, in this case, the library component, should hold all of the state variables and pass down that information to the children.
+// search in docs idea of 'lifting state up'
+
+class Library extends React.Component{
+    state = {
+        open: true,
+        freeBookmark: true,
+        hiring: true
+    }
+
     toggleOpenClosed = () => { //because arrow functions will automatically bind this inside of the context of this function
         this.setState(previousState => ({ //And this'll make sure that this.setState, no matter how long it takes, will work as expected.
             open: !previousState.open
@@ -417,10 +471,17 @@ class Library extends React.Component{
         const {books} = this.props //now you dont have to add this.props.books.map books destructures
         return (
             <div>
+                {this.state.hiring ? <Hiring /> : <NotHiring />}
                 {books.map(
                     // book => <Book title={book.title} author={book.author} pages={book.pages}/> //the problem with this is we can't identify or point a specific book div
                     // //which will help track which of these components are updating, and rendering with React
-                    (book, i) => <Book key={i} title={book.title} author={book.author} pages={book.pages}/>// now we have unique key with every book
+                    (book, i) => 
+                    <Book 
+                        key={i} 
+                        title={book.title}
+                        author={book.author} 
+                        pages={book.pages}
+                        freeBookmark={this.state.freeBookmark}/>
                 )}
                 <p>this Library is {this.state.open ? 'open' : 'closed'}.</p>
                 <button onClick={this.toggleOpenClosed}>Change</button>
@@ -429,13 +490,19 @@ class Library extends React.Component{
     }
 }
 
-//=======09   OR  10  OR 11 OR 12
-const Book = ({title, author, pages}) => {
+const Hiring = () => <div><p>The Library is Hiring. Go To www.library.com/jobs for more.</p></div>
+const NotHiring = () => 
+    <div>
+        <p>The Library is not hiring.Check back later for more info.</p>
+    </div>
+//=======14
+const Book = ({title, author, pages, freeBookmark}) => {
     return (
         <div>
             <h2>{title}</h2>
             <p>By: {author}</p>
             <p>Pages: {pages} pages</p> 
+            <p>Free Bookmark Today: {freeBookmark ? 'Yes!' : "No!" }</p>
         </div>
     )
 }
