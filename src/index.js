@@ -454,61 +454,183 @@ let bookList = [
 //In other words, your root component, in this case, the library component, should hold all of the state variables and pass down that information to the children.
 // search in docs idea of 'lifting state up'
 
-class Library extends React.Component{
-    state = {
-        open: true,
-        freeBookmark: true,
-        hiring: true
-    }
+// class Library extends React.Component{
+//     state = {
+//         open: true,
+//         freeBookmark: true,
+//         hiring: true
+//     }
 
-    toggleOpenClosed = () => { //because arrow functions will automatically bind this inside of the context of this function
-        this.setState(previousState => ({ //And this'll make sure that this.setState, no matter how long it takes, will work as expected.
-            open: !previousState.open
-        }))
+//     toggleOpenClosed = () => { //because arrow functions will automatically bind this inside of the context of this function
+//         this.setState(previousState => ({ //And this'll make sure that this.setState, no matter how long it takes, will work as expected.
+//             open: !previousState.open
+//         }))
+//     }
+//     render () {
+//         //const books = this.props.books
+//         const {books} = this.props //now you dont have to add this.props.books.map books destructures
+//         return (
+//             <div>
+//                 {this.state.hiring ? <Hiring /> : <NotHiring />}
+//                 {books.map(
+//                     // book => <Book title={book.title} author={book.author} pages={book.pages}/> //the problem with this is we can't identify or point a specific book div
+//                     // //which will help track which of these components are updating, and rendering with React
+//                     (book, i) => 
+//                     <Book 
+//                         key={i} 
+//                         title={book.title}
+//                         author={book.author} 
+//                         pages={book.pages}
+//                         freeBookmark={this.state.freeBookmark}/>
+//                 )}
+//                 <p>this Library is {this.state.open ? 'open' : 'closed'}.</p>
+//                 <button onClick={this.toggleOpenClosed}>Change</button>
+//             </div>
+//         )
+//     }
+// }
+
+// const Hiring = () => <div><p>The Library is Hiring. Go To www.library.com/jobs for more.</p></div>
+// const NotHiring = () => 
+//     <div>
+//         <p>The Library is not hiring.Check back later for more info.</p>
+//     </div>
+// //=======14
+// const Book = ({title, author, pages, freeBookmark}) => {
+//     return (
+//         <div>
+//             <h2>{title}</h2>
+//             <p>By: {author}</p>
+//             <p>Pages: {pages} pages</p> 
+//             <p>Free Bookmark Today: {freeBookmark ? 'Yes!' : "No!" }</p>
+//         </div>
+//     )
+// }
+
+
+// ReactDOM.render(
+//     <Library books={bookList}/>,  
+//     document.getElementById('root')
+// )
+//=================================
+//=================================
+// So mounting and unmounting just means whenever it's added to the dom, and whenever it's taken away.
+
+//Component lifecycle methods are only available but now you can also with function which we do later
+// whenever the props or state of app changes render will ve called
+// so the next method is constructor.the constructor is called before the component is mounted that why its a great place to initialized the state
+// you can also bind event handler methods using constructor
+
+// class Library extends React.Component{
+//     state = {
+//         open: true,
+//         freeBookmark: true,
+//         hiring: true,
+//         data: [],
+//         loading: false
+//     }
+
+//     componentDidMount() {
+//         console.log("The component is now mounted!")/// always show this msg in console
+//         this.setState({loading: true})
+//         fetch('https://hplussport.com/api/products/order/price/sort/asc/qty/1')
+//                 .then(data => data.json())// store this into data
+//                 .then(data => this.setState({data, loading: false}))// set the state 'data' with it 
+//     }
+    
+//     componentWillUpdate() {
+//         console.log("The component just updated") // show whenever something change in component for here example try open and close library button
+//     }
+
+//     toggleOpenClosed = () => { //because arrow functions will automatically bind this inside of the context of this function
+//         this.setState(previousState => ({ //And this'll make sure that this.setState, no matter how long it takes, will work as expected.
+//             open: !previousState.open
+//         }))
+//     }
+//     render () {
+//         //const books = this.props.books
+//         const {books} = this.props //now you dont have to add this.props.books.map books destructures
+//         return (
+//             <div>
+//                 {this.state.loading ? "Loading..."
+//                 :<div>
+//                     {this.state.data.map(product => {
+//                         return (
+//                             <div key={product.id}>
+//                                 <h3>Library Product of the Week!</h3>
+//                                 <h4>{product.name}</h4>
+//                                 <img src={product.image} height={100} alt={product.name}/>
+//                             </div>
+//                         )
+//                     })}
+//                 </div>
+//                 }
+//                 {this.state.hiring ? <Hiring /> : <NotHiring />}
+//                 {books.map(
+//                     // book => <Book title={book.title} author={book.author} pages={book.pages}/> //the problem with this is we can't identify or point a specific book div
+//                     // //which will help track which of these components are updating, and rendering with React
+//                     (book, i) => 
+//                     <Book 
+//                         key={i} 
+//                         title={book.title}
+//                         author={book.author} 
+//                         pages={book.pages}
+//                         freeBookmark={this.state.freeBookmark}/>
+//                 )}
+//                 <p>this Library is {this.state.open ? 'open' : 'closed'}.</p>
+//                 <button onClick={this.toggleOpenClosed}>Change</button>
+//             </div>
+//         )
+//     }
+// }
+
+// const Hiring = () => <div><p>The Library is Hiring. Go To www.library.com/jobs for more.</p></div>
+// const NotHiring = () => 
+//     <div>
+//         <p>The Library is not hiring.Check back later for more info.</p>
+//     </div>
+// //=======14
+// const Book = ({title, author, pages, freeBookmark}) => {
+//     return (
+//         <div>
+//             <h2>{title}</h2>
+//             <p>By: {author}</p>
+//             <p>Pages: {pages} pages</p> 
+//             <p>Free Bookmark Today: {freeBookmark ? 'Yes!' : "No!" }</p>
+//         </div>
+//     )
+// }
+
+
+// ReactDOM.render(
+//     <Library books={bookList}/>,  
+//     document.getElementById('root')
+// )
+
+//================================
+//================================ remove above
+//================================
+
+class FavoriteColorForm extends React.Component {
+    state = { value: ''}
+    newColor = e =>//this is our custom function to set the value
+        this.setState({ value: e.target.value })
+    submit = e => {
+        console.log(`New Color: ${this.state.value}`)// this is called template string 
+        e.preventDefault()
     }
-    render () {
-        //const books = this.props.books
-        const {books} = this.props //now you dont have to add this.props.books.map books destructures
-        return (
-            <div>
-                {this.state.hiring ? <Hiring /> : <NotHiring />}
-                {books.map(
-                    // book => <Book title={book.title} author={book.author} pages={book.pages}/> //the problem with this is we can't identify or point a specific book div
-                    // //which will help track which of these components are updating, and rendering with React
-                    (book, i) => 
-                    <Book 
-                        key={i} 
-                        title={book.title}
-                        author={book.author} 
-                        pages={book.pages}
-                        freeBookmark={this.state.freeBookmark}/>
-                )}
-                <p>this Library is {this.state.open ? 'open' : 'closed'}.</p>
-                <button onClick={this.toggleOpenClosed}>Change</button>
-            </div>
+    render() {
+        return(
+            <form onSubmit={this.submit}>
+                <label>Favorite Color:</label>
+                <input type="color" 
+                onChange={this.newColor}/>
+                <button>Submit</button>
+            </form>
         )
     }
 }
-
-const Hiring = () => <div><p>The Library is Hiring. Go To www.library.com/jobs for more.</p></div>
-const NotHiring = () => 
-    <div>
-        <p>The Library is not hiring.Check back later for more info.</p>
-    </div>
-//=======14
-const Book = ({title, author, pages, freeBookmark}) => {
-    return (
-        <div>
-            <h2>{title}</h2>
-            <p>By: {author}</p>
-            <p>Pages: {pages} pages</p> 
-            <p>Free Bookmark Today: {freeBookmark ? 'Yes!' : "No!" }</p>
-        </div>
-    )
-}
-
-
 ReactDOM.render(
-    <Library books={bookList}/>,  
+    <FavoriteColorForm />,
     document.getElementById('root')
 )
