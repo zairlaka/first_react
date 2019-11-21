@@ -609,28 +609,104 @@ let bookList = [
 
 //================================
 //================================ remove above
-//================================
+//================================ forms submit 
 
-class FavoriteColorForm extends React.Component {
-    state = { value: ''}
-    newColor = e =>//this is our custom function to set the value
-        this.setState({ value: e.target.value })
-    submit = e => {
-        console.log(`New Color: ${this.state.value}`)// this is called template string 
-        e.preventDefault()
+// class FavoriteColorForm extends React.Component {
+//     state = { value: ''}
+//     newColor = e =>//this is our custom function to set the value
+//         this.setState({ value: e.target.value })
+//     submit = e => {
+//         console.log(`New Color: ${this.state.value}`)// this is called template string 
+//         e.preventDefault()
+//     }
+//     render() {
+//         return(
+//             <form onSubmit={this.submit}>
+//                 <label>Favorite Color:</label>
+//                 <input type="color" 
+//                 onChange={this.newColor}/>
+//                 <button>Submit</button>
+//             </form>
+//         )
+//     }
+// }
+// ReactDOM.render(
+//     <FavoriteColorForm />,
+//     document.getElementById('root')
+// )
+
+
+//================================
+//================================ remove above
+//================================ defaults props
+
+class Library extends React.Component{
+    // static defaultProps = {//this is a static property
+    //     books:[//Well, we're adding this so that in the event that there's no value available for books, we're going to use this default value instead
+    //         {"title": "Harry Potter", "author": "Jk Rowling", "pages": 100 }
+    //     ]//instead of our application breaking down because we don't supply those data values, instead we're going to just display the defaults.
+    // }
+    state = {
+        open: true,
+        freeBookmark: true,
+        hiring: true,
+        data: [],
+        loading: false
     }
-    render() {
-        return(
-            <form onSubmit={this.submit}>
-                <label>Favorite Color:</label>
-                <input type="color" 
-                onChange={this.newColor}/>
-                <button>Submit</button>
-            </form>
+    toggleOpenClosed = () => { //because arrow functions will automatically bind this inside of the context of this function
+        this.setState(previousState => ({ //And this'll make sure that this.setState, no matter how long it takes, will work as expected.
+            open: !previousState.open
+        }))
+    }
+    render () {
+        //const books = this.props.books
+        const {books} = this.props //now you dont have to add this.props.books.map books destructures
+        return (
+            <div>
+                {this.state.loading ? "Loading..."
+                :<div>
+                    {this.state.data.map(product => {
+                        return (
+                            <div key={product.id}>
+                                <h3>Library Product of the Week!</h3>
+                                <h4>{product.name}</h4>
+                                <img src={product.image} height={100} alt={product.name}/>
+                            </div>
+                        )
+                    })}
+                </div>
+                }
+
+                {books.map(
+                    // book => <Book title={book.title} author={book.author} pages={book.pages}/> //the problem with this is we can't identify or point a specific book div
+                    // //which will help track which of these components are updating, and rendering with React
+                    (book, i) => 
+                    <Book 
+                        key={i} 
+                        title={book.title}
+                        author={book.author} 
+                        pages={book.pages}
+                        freeBookmark={this.state.freeBookmark}/>
+                )}
+                <p>this Library is {this.state.open ? 'open' : 'closed'}.</p>
+                <button onClick={this.toggleOpenClosed}>Change</button>
+            </div>
         )
     }
 }
+// We can also add default properties to the book component and umc
+const Book = ({title="No Title Provided", author="No Author Provided", pages=0, freeBookmark}) => {
+    return (
+        <div>
+            <h2>{title}</h2>
+            <p>By: {author}</p>
+            <p>Pages: {pages} pages</p> 
+            <p>Free Bookmark Today: {freeBookmark ? 'Yes!' : "No!" }</p>
+        </div>
+    )
+}
+
 ReactDOM.render(
-    <FavoriteColorForm />,
+    <Library books={bookList}/>,  
     document.getElementById('root')
 )
